@@ -1,6 +1,6 @@
 # Variables
 SCRIPT_NAME = extract_audio.py
-VERSION = 1.0.1
+VERSION = 1.0.2
 TAR_FILE = v$(VERSION).tar.gz
 GITHUB_USER = cajias
 REPO_NAME = v2a
