@@ -26,7 +26,7 @@ pip install -r requirements.txt
 To use the script, navigate to the directory containing the script and run the following command:
 
 ```bash
-python convert_to_mp3.py <input_folder> <output_folder>
+python extract_audio.py <input_folder> <output_folder>
 ```
 
 Where `<input_folder>` is the folder containing the video files to be converted and `<output_folder>` is the folder where the converted audio files will be saved.
