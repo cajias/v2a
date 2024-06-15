@@ -17,6 +17,7 @@ $(TAR_FILE): $(SCRIPT_NAME)
 release: $(TAR_FILE)
 	# Create GitHub release
 	gh release create v$(VERSION) $(TAR_FILE) --title "v$(VERSION)" --notes "Release version $(VERSION)"
+	curl -L -o $(TAR_FILE) https://github.com/$(GITHUB_USER)/$(REPO_NAME)/archive/refs/tags/$(TAR_FILE)
 	# Get the SHA-256 checksum of the tarball
 	@shasum -a 256 $(TAR_FILE) | tr -s ' ' | cut -d ' ' -f 1
 
