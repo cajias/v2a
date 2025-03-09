@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.18.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "v2a"
+version = "1.0.2"
+description = "Video to Audio Converter"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [
+    {name = "cajias", email = "example@example.com"}
+]
+dependencies = [
+    "ffmpeg-python>=0.2.0",
+    "tqdm>=4.66.4",
+    "aioboto3>=11.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.2.0",
+    "mypy>=1.7.0",
+]
+
+[project.scripts]
+v2a = "v2a.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["v2a"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["v2a", "tests"]
+fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "I", "N", "UP", "ANN", "S", "BLE", "FBT", "A", "COM", "C4", "DTZ", "T10", "EM", "FA", "ISC", "ICN", "G", "PIE", "PT", "Q", "RSE", "RET", "SLF", "SIM", "TID", "INT", "ARG", "PTH", "PL", "TRY", "FLY", "PERF", "LOG", "RUF"]
+ignore = ["ANN101", "PLR0913", "S101", "ANN401"]
+preview = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+strict_optional = true
+
+[[tool.mypy.overrides]]
+module = ["aioboto3.*", "ffmpeg.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "--cov=v2a --cov-report=term --cov-report=xml"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"

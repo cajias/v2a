@@ -1,14 +1,23 @@
 # v2a - Video to Audio Converter
 
-This project contains a Python script that converts video files to audio files. It specifically converts `.m4a` and `.mp4` files to `.mp3` format.
+This project contains a Python package that converts video files to audio files. It specifically converts video files to `.mp3` format.
+
+[![Python Tests](https://github.com/cajias/v2a/actions/workflows/python-tests.yml/badge.svg)](https://github.com/cajias/v2a/actions/workflows/python-tests.yml)
 
 ## Prerequisites
 
-- Python 3
-- ffmpeg-python
-- tqdm
+- Python 3.12+
+- ffmpeg (system dependency)
 
 ## Installation
+
+### From PyPI
+
+```bash
+pip install v2a
+```
+
+### From Source
 
 1. Clone this repository: 
 ```bash
@@ -16,18 +25,67 @@ git clone https://github.com/cajias/v2a.git
 cd v2a
 ```
 
-3. Install the required Python packages:
+2. Install the package in development mode:
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
 ## Usage
 
-To use the script, navigate to the directory containing the script and run the following command:
+### Command Line
+
+After installation, you can use the command-line interface:
 
 ```bash
-python extract_audio.py <input_folder> <output_folder>
+v2a -i <input_folder> -o <output_folder>
 ```
 
-Where `<input_folder>` is the folder containing the video files to be converted and `<output_folder>` is the folder where the converted audio files will be saved.
+Or with optional S3 upload:
+
+```bash
+v2a -i <input_folder> -o <output_folder> -b <bucket_name> -r <region>
+```
+
+### As a Python Package
+
+```python
+from v2a.core import extract_audio
+
+extract_audio("input_folder", "output_folder")
+```
+
+## Development
+
+### Setup Development Environment
+
+```bash
+# Clone the repository
+git clone https://github.com/cajias/v2a.git
+cd v2a
+
+# Install development dependencies
+pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pre-commit install
+```
+
+### Running Tests
+
+```bash
+pytest
+```
+
+### Type Checking
+
+```bash
+mypy .
+```
+
+### Linting
+
+```bash
+ruff check .
+ruff format .
+```
 
