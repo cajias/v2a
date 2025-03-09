@@ -89,3 +89,37 @@ ruff check .
 ruff format .
 ```
 
+## Release Process
+
+The project includes an automated release process that:
+
+1. Creates GitHub releases when version tags are pushed
+2. Updates the Homebrew formula in [cajias/homebrew-tools](https://github.com/cajias/homebrew-tools)
+
+### Creating a New Release
+
+```bash
+# Bump the version (patch, minor, or major)
+./scripts/bump_version.py patch
+
+# Push the changes and tag
+git push && git push origin --tags
+```
+
+This will:
+1. Increase the version number in both `pyproject.toml` and `v2a/__init__.py`
+2. Create a git commit and tag
+3. When pushed, GitHub Actions will:
+   - Create a new GitHub release
+   - Update the Homebrew formula with the new version
+
+### Installing from Homebrew
+
+```bash
+# Add the tap (first time only)
+brew tap cajias/tools
+
+# Install the package
+brew install v2a
+```
+

@@ -1,0 +1,101 @@
+name: Update Homebrew Tap
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'pyproject.toml'  # Only run when version might have changed
+      - 'v2a/**'          # Or when core package files change
+
+jobs:
+  update-homebrew:
+    runs-on: ubuntu-latest
+    env:
+      BREW_TAP_REPO: cajias/homebrew-tools
+      FORMULA_NAME: v2a
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Full history for proper versioning
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Get package version
+      id: get_version
+      run: |
+        VERSION=$(grep -m 1 "version = " pyproject.toml | cut -d'"' -f2)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Version: $VERSION"
+
+    - name: Build package
+      run: |
+        pip install build twine
+        python -m build
+        
+    - name: Calculate SHA256
+      id: sha256
+      run: |
+        SHA256=$(sha256sum dist/v2a-${{ env.VERSION }}.tar.gz | cut -d' ' -f1)
+        echo "SHA256=$SHA256" >> $GITHUB_ENV
+        echo "SHA256: $SHA256"
+
+    - name: Checkout tap repository
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.BREW_TAP_REPO }}
+        path: homebrew-tools
+        token: ${{ secrets.HOMEBREW_TAP_TOKEN }}  # PAT with repo access
+
+    - name: Update formula
+      run: |
+        cd homebrew-tools
+        
+        # Create or update the formula
+        cat > ${{ env.FORMULA_NAME }}.rb << EOL
+        class V2a < Formula
+          desc "Video to Audio Converter"
+          homepage "https://github.com/cajias/v2a"
+          url "https://github.com/cajias/v2a/archive/v${{ env.VERSION }}.tar.gz"
+          sha256 "${{ env.SHA256 }}"
+          version "${{ env.VERSION }}"
+
+          depends_on "ffmpeg"
+          depends_on "python@3.9"
+
+          def install
+            virtualenv_create(libexec, "python3.9")
+            virtualenv_install_with_resources
+          end
+
+          test do
+            system bin/"v2a", "--help"
+          end
+        end
+        EOL
+
+    - name: Check if changes need to be committed
+      id: check_changes
+      run: |
+        cd homebrew-tools
+        if git diff --exit-code ${{ env.FORMULA_NAME }}.rb; then
+          echo "No changes to commit"
+          echo "CHANGES_EXIST=false" >> $GITHUB_ENV
+        else
+          echo "Changes to commit"
+          echo "CHANGES_EXIST=true" >> $GITHUB_ENV
+        fi
+
+    - name: Commit and push changes
+      if: env.CHANGES_EXIST == 'true'
+      run: |
+        cd homebrew-tools
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add ${{ env.FORMULA_NAME }}.rb
+        git commit -m "Update ${{ env.FORMULA_NAME }} to v${{ env.VERSION }}"
+        git push
