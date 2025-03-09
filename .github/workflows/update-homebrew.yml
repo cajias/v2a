@@ -31,6 +31,7 @@ jobs:
         VERSION=$(grep -m 1 "version = " pyproject.toml | cut -d'"' -f2)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
         echo "Version: $VERSION"
+        echo "This will update the Homebrew formula to version $VERSION"
 
     - name: Build package
       run: |
