@@ -2,6 +2,39 @@
 
 This file contains helpful information and commands for Claude to assist with the v2a project.
 
+## Contribution Workflow
+
+When making changes to the codebase:
+
+1. **Always use feature branches**:
+   ```bash
+   # Create a new branch for each feature/change
+   git checkout -b feature/descriptive-name
+   ```
+
+2. **Make focused, atomic commits**:
+   ```bash
+   # Stage your changes
+   git add path/to/changed/files
+   
+   # Create a descriptive commit
+   git commit -m "[type] Clear description of changes"
+   ```
+
+3. **Submit changes via PR**:
+   ```bash
+   # Push feature branch
+   git push -u origin feature/descriptive-name
+   
+   # Create PR using gh cli
+   gh pr create --title "Descriptive title" --body "Detailed description"
+   ```
+
+4. **Address PR feedback**:
+   - When the user comments on a PR with feedback, make additional commits to address the comments
+   - Push the changes to the same feature branch
+   - Mention which feedback was addressed in commit messages
+
 ## Project Overview
 v2a is a Python package that converts video files to audio files in MP3 format. It features:
 - Command-line interface
