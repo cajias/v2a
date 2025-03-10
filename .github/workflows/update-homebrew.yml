@@ -35,6 +35,7 @@ jobs:
 
     - name: Build package
       run: |
+        pip install pyproject_hooks packaging
         pip install --no-deps build twine
         python -m build
         
