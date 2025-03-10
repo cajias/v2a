@@ -45,7 +45,11 @@ jobs:
     - name: Calculate SHA256
       id: sha256
       run: |
-        SHA256=$(sha256sum dist/v2a-${{ env.VERSION }}.tar.gz | cut -d' ' -f1)
+        # Download the tarball from GitHub to calculate the correct SHA256
+        TARBALL_URL="https://github.com/cajias/v2a/archive/v${{ env.VERSION }}.tar.gz"
+        echo "Downloading tarball from: $TARBALL_URL"
+        curl -sL -o /tmp/v2a-${{ env.VERSION }}.tar.gz "$TARBALL_URL"
+        SHA256=$(sha256sum /tmp/v2a-${{ env.VERSION }}.tar.gz | cut -d' ' -f1)
         echo "SHA256=$SHA256" >> $GITHUB_ENV
         echo "SHA256: $SHA256"
 
