@@ -77,8 +77,9 @@ jobs:
           depends_on "python@3.9"
 
           def install
-            virtualenv_create(libexec, "python3.9")
-            virtualenv_install_with_resources
+            venv = virtualenv_create(libexec, "python3.9")
+            venv.pip_install buildpath
+            bin.install_symlink Dir["\#{libexec}/bin/*"]
           end
 
           test do
