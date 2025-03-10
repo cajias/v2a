@@ -35,7 +35,7 @@ jobs:
 
     - name: Build package
       run: |
-        pip install build twine
+        pip install --no-deps build twine
         python -m build
         
     - name: Calculate SHA256
