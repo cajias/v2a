@@ -3,7 +3,7 @@
 import argparse
 import sys
 from collections.abc import Sequence
-from typing import Optional, Union
+from typing import Optional
 
 from v2a.core import extract_audio
 

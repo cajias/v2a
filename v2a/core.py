@@ -21,9 +21,11 @@ except ImportError:
     HAS_TQDM = False
     
     # Simple replacement for tqdm
-    def tqdm(iterable: Iterable[T], **_kwargs: Any) -> Iterable[T]:  # type: ignore
+    def _simple_tqdm(iterable: Iterable[T], **_kwargs: Any) -> Iterable[T]:
         """Simple progress replacement when tqdm is not available."""
         return iterable
+    
+    tqdm = _simple_tqdm  # type: ignore
 
 try:
     import aioboto3
