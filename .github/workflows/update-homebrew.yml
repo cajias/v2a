@@ -67,6 +67,8 @@ jobs:
         # Create or update the formula
         cat > ${{ env.FORMULA_NAME }}.rb << EOL
         class V2a < Formula
+          include Language::Python::Virtualenv
+
           desc "Video to Audio Converter"
           homepage "https://github.com/cajias/v2a"
           url "https://github.com/cajias/v2a/archive/v${{ env.VERSION }}.tar.gz"
@@ -77,9 +79,7 @@ jobs:
           depends_on "python@3.9"
 
           def install
-            venv = virtualenv_create(libexec, "python3.9")
-            venv.pip_install buildpath
-            bin.install_symlink Dir["\#{libexec}/bin/*"]
+            virtualenv_install_with_resources
           end
 
           test do
