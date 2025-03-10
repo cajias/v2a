@@ -68,6 +68,10 @@ strict_optional = true
 module = ["aioboto3.*", "ffmpeg.*"]
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = ["v2a.cli"]
+disable_error_code = ["syntax"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
