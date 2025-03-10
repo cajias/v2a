@@ -9,6 +9,7 @@ T = TypeVar("T")
 
 try:
     import ffmpeg
+
     HAS_FFMPEG = True
 except ImportError:
     HAS_FFMPEG = False
@@ -16,17 +17,21 @@ except ImportError:
 # Import tqdm if available, otherwise provide a minimal implementation
 try:
     from tqdm import tqdm  # type: ignore
+
     HAS_TQDM = True
 except ImportError:
     HAS_TQDM = False
-    
+
     # Simple replacement for tqdm
-    def tqdm(iterable: Iterable[T], **_kwargs: Any) -> Iterable[T]:  # type: ignore
+    def _simple_tqdm(iterable: Iterable[T], **_kwargs: Any) -> Iterable[T]:
         """Simple progress replacement when tqdm is not available."""
         return iterable
 
+    tqdm = _simple_tqdm  # type: ignore
+
 try:
     import aioboto3
+
     HAS_AIOBOTO3 = True
 except ImportError:
     HAS_AIOBOTO3 = False
@@ -43,7 +48,7 @@ async def upload_file_to_s3(bucket_name: str, file_name: str, file_path: str) ->
     if not HAS_AIOBOTO3:
         msg = "aioboto3 is required for S3 uploads"
         raise ImportError(msg)
-        
+
     async with aioboto3.client("s3") as s3:  # type: ignore
         await s3.upload_file(file_path, bucket_name, file_name)
 
@@ -61,7 +66,7 @@ async def transcribe_file_async(bucket_name: str, file_name: str) -> dict:
     if not HAS_AIOBOTO3:
         msg = "aioboto3 is required for transcription"
         raise ImportError(msg)
-        
+
     async with aioboto3.client("transcribe", region_name="us-west-2") as transcribe_client:  # type: ignore
         job_name = f"transcribeJob{int(asyncio.get_event_loop().time())}"
         job_uri = f"s3://{bucket_name}/{file_name}"
@@ -93,7 +98,7 @@ def extract_audio(input_folder: str, output_folder: str) -> None:
     if not HAS_FFMPEG:
         msg = "ffmpeg-python is required for audio extraction"
         raise ImportError(msg)
-    
+
     output_path = Path(output_folder)
     if not output_path.exists():
         output_path.mkdir(parents=True)
