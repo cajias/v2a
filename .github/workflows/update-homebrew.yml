@@ -7,6 +7,9 @@ on:
       - 'pyproject.toml'  # Only run when version might have changed
       - 'v2a/**'          # Or when core package files change
 
+permissions:
+  contents: read
+
 jobs:
   update-homebrew:
     runs-on: ubuntu-latest

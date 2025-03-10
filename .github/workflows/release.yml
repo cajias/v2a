@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'  # Push events to tags matching v*, i.e., v1.0.0, v20.15.10
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build and Create Release
@@ -27,11 +30,12 @@ jobs:
       - name: Build package
         run: |
           python -m build
+          ls -la dist/  # Debug: Check what files are actually built
           
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
-          files: ./dist/v2a-${{ github.ref_name }}.tar.gz
+          files: ./dist/*.tar.gz  # Use a more flexible pattern to match the tarball
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
