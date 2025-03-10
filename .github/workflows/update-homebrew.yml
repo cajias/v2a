@@ -87,16 +87,20 @@ jobs:
       id: check_changes
       run: |
         cd homebrew-tools
-        if [ -f ${{ env.FORMULA_NAME }}.rb ]; then
+        
+        # Check if the file is tracked by git
+        if git ls-files --error-unmatch ${{ env.FORMULA_NAME }}.rb 2>/dev/null; then
+          # File exists and is tracked by git
           if git diff --exit-code ${{ env.FORMULA_NAME }}.rb; then
-            echo "No changes to commit for existing file"
+            echo "No changes to commit for existing tracked file"
             echo "CHANGES_EXIST=false" >> $GITHUB_ENV
           else
-            echo "Changes to commit for existing file"
+            echo "Changes to commit for existing tracked file"
             echo "CHANGES_EXIST=true" >> $GITHUB_ENV
           fi
         else
-          echo "New formula file created"
+          # File either doesn't exist or is not tracked by git
+          echo "New formula file or untracked file - Will add to git"
           echo "CHANGES_EXIST=true" >> $GITHUB_ENV
         fi
 
