@@ -1,0 +1,12 @@
+# Default owners for everything in the repo
+* @cajias
+
+# Workflow files ownership
+.github/workflows/ @cajias
+
+# Package core files
+v2a/core.py @cajias
+v2a/cli.py @cajias
+
+# Tests
+tests/ @cajias

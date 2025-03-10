@@ -96,6 +96,17 @@ The project includes an automated release process that:
 1. Creates GitHub releases when version tags are pushed
 2. Updates the Homebrew formula in [cajias/homebrew-tools](https://github.com/cajias/homebrew-tools)
 
+### Required Secrets Setup
+
+For the Homebrew formula update to work, you need to set up a GitHub secret:
+
+1. Create a GitHub Personal Access Token (PAT) with `repo` scope
+2. Add it as a secret named `HOMEBREW_TAP_TOKEN` in the repository settings
+   - Go to Settings > Secrets and variables > Actions
+   - Click "New repository secret"
+   - Name: `HOMEBREW_TAP_TOKEN`
+   - Value: Your PAT
+
 ### Creating a New Release
 
 ```bash
