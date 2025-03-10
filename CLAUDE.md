@@ -22,7 +22,10 @@ When working on this project, Claude should follow these guidelines:
 
 2. **Make focused, atomic commits**:
    ```bash
+   # Stage your changes
    git add path/to/changed/files
+   
+   # Create a descriptive commit
    git commit -m "[type] Clear description of changes"
    ```
 
