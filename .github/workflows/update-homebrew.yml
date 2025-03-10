@@ -87,11 +87,16 @@ jobs:
       id: check_changes
       run: |
         cd homebrew-tools
-        if git diff --exit-code ${{ env.FORMULA_NAME }}.rb; then
-          echo "No changes to commit"
-          echo "CHANGES_EXIST=false" >> $GITHUB_ENV
+        if [ -f ${{ env.FORMULA_NAME }}.rb ]; then
+          if git diff --exit-code ${{ env.FORMULA_NAME }}.rb; then
+            echo "No changes to commit for existing file"
+            echo "CHANGES_EXIST=false" >> $GITHUB_ENV
+          else
+            echo "Changes to commit for existing file"
+            echo "CHANGES_EXIST=true" >> $GITHUB_ENV
+          fi
         else
-          echo "Changes to commit"
+          echo "New formula file created"
           echo "CHANGES_EXIST=true" >> $GITHUB_ENV
         fi
 
