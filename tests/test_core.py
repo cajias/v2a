@@ -23,16 +23,16 @@ def test_extract_audio_conversion(mock_iterdir: Mock, mock_ffmpeg: Mock) -> None
     mock_file.is_file.return_value = True
     mock_file.stem = "test"
     mock_file.name = "test.mp4"
-    
+
     # Set a safe temporary path
     temp_path = str(Path(tempfile.gettempdir()) / "test.mp4")
     mock_str = MagicMock(return_value=temp_path)
     # Use type ignoring for this test-only code
     mock_file.__str__ = mock_str  # type: ignore
-    
+
     # Set up the mock to return our test file
     mock_iterdir.return_value = [mock_file]
-    
+
     # Set up ffmpeg mocks
     mock_ffmpeg.probe.return_value = {}
     mock_ffmpeg.input.return_value.output.return_value.run = MagicMock()
